@@ -15,7 +15,6 @@ const registerUser = async (req, res) => {
       password,
       rePassword
     );
-    console.log(user);
     res.redirect('/');
   } catch (error) {
     console.log(error.message);
