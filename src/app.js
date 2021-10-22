@@ -6,6 +6,7 @@ const router = require('./router');
 const app = express();
 
 app.use(express.static(path.resolve(__dirname, './public')));
+app.use(express.urlencoded({ extended: false }));
 require('./config/handlebars.config')(app);
 app.use(router);
 initDb(DB_CONNECTION_URI)
