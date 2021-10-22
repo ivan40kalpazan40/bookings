@@ -17,11 +17,13 @@
             <li><a href='/hotel/create'>Add +</a></li>
           </ul>
         </div>
-        <div class='right-container'>
+         <div class='right-container'></div>
+        {{#if user}}
+          <a href='/auth/logout' class='log-out'>Logout</a>
+        {{else}}
           <a href='/auth/login' class='log-out'>Login</a>
           <a href='/auth/register' class='log-out'>Register</a>
-          <a href='/auth/logout' class='log-out'>Logout</a>
-
+        {{/if}}
         </div>
       </nav>
 
