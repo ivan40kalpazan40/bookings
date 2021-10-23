@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const hotelServices = require('../services/hotelServices');
 const { isLogged, isGuest } = require('../middleware/authMiddleware');
-const { createCollection } = require('../models/Hotel');
 
 const renderCreate = (req, res) => {
   res.render('hotel/create');
@@ -25,15 +24,11 @@ const createListing = async (req, res) => {
   }
 };
 
-const renderEdit = (req, res) => {
-  res.render('hotel/edit');
-};
-
 const renderDetails = async (req, res) => {
   const hotelId = req.params.id;
   try {
     const hotel = await hotelServices.getOne(hotelId);
-    const isOwner = hotel.owner == req.user._id;
+    const isOwner = await hotel.isOwner(req.user._id);
     res.render('hotel/details', { isOwner, hotel: hotel.toObject() });
   } catch (error) {
     console.log(error.message);
@@ -41,9 +36,33 @@ const renderDetails = async (req, res) => {
   }
 };
 
+const renderEdit = async (req, res) => {
+  const hotelId = req.params.id;
+  try {
+    const hotel = await hotelServices.getOne(hotelId);
+    res.render('hotel/edit', { hotel: hotel.toObject() });
+  } catch (error) {
+    console.log(error.message);
+    res.send('Error::edit:: ' + error.message);
+  }
+};
+
+const editListing = async (req, res) => {
+  const hotelId = req.params.id;
+  const formData = { ...req.body };
+  try {
+    await hotelServices.update(hotelId, formData);
+    res.redirect(`/hotel/${hotelId}/details`);
+  } catch (error) {
+    console.log(error.message);
+    res.send('Error::edit:: ' + error.message);
+  }
+};
+
 router.get('/create', isLogged, renderCreate);
 router.post('/create', isLogged, createListing);
-router.get('/edit', isLogged, renderEdit);
+router.get('/:id/edit', isLogged, renderEdit);
+router.post('/:id/edit', isLogged, editListing);
 router.get('/:id/details', isLogged, renderDetails);
 
 module.exports = router;

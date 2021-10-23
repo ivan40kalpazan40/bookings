@@ -9,5 +9,8 @@ const hotelSchema = new mongoose.Schema({
   owner: { type: mongoose.Types.ObjectId, ref: 'User' },
 });
 
+hotelSchema.method('isOwner', function (userId) {
+  return this.owner == userId;
+});
 const Hotel = mongoose.model('Hotel', hotelSchema);
 module.exports = Hotel;
