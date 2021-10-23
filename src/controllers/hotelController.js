@@ -29,8 +29,20 @@ const renderEdit = (req, res) => {
   res.render('hotel/edit');
 };
 
+const renderDetails = async (req, res) => {
+  const hotelId = req.params.id;
+  try {
+    const hotel = await hotelServices.getOne(hotelId);
+    res.render('hotel/details', { hotel: hotel.toObject() });
+  } catch (error) {
+    console.log(error.message);
+    res.send('Error::details:: ' + error.message);
+  }
+};
+
 router.get('/create', isLogged, renderCreate);
 router.post('/create', isLogged, createListing);
 router.get('/edit', isLogged, renderEdit);
+router.get('/:id/details', isLogged, renderDetails);
 
 module.exports = router;
