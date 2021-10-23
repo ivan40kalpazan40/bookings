@@ -33,7 +33,8 @@ const renderDetails = async (req, res) => {
   const hotelId = req.params.id;
   try {
     const hotel = await hotelServices.getOne(hotelId);
-    res.render('hotel/details', { hotel: hotel.toObject() });
+    const isOwner = hotel.owner == req.user._id;
+    res.render('hotel/details', { isOwner, hotel: hotel.toObject() });
   } catch (error) {
     console.log(error.message);
     res.send('Error::details:: ' + error.message);
