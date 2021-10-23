@@ -36,7 +36,16 @@ exports.isGuest = function (req, res, next) {
 exports.isOwner = async function (req, res, next) {
   const hotelId = req.params.id;
   const hotel = await Hotel.findById(hotelId);
-  if (hotel.isOwner(req.user?._id)) {
+  if (hotel.isOwner(req.user._id)) {
+    return next();
+  }
+  res.redirect('/');
+};
+
+exports.notAnOwner = async function (req, res, next) {
+  const hotelId = req.params.id;
+  const hotel = await Hotel.findById(hotelId);
+  if (!hotel.isOwner(req.user._id)) {
     return next();
   }
   res.redirect('/');

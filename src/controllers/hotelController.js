@@ -1,6 +1,11 @@
 const router = require('express').Router();
 const hotelServices = require('../services/hotelServices');
-const { isLogged, isGuest, isOwner } = require('../middleware/authMiddleware');
+const {
+  isLogged,
+  isGuest,
+  isOwner,
+  notAnOwner,
+} = require('../middleware/authMiddleware');
 
 const renderCreate = (req, res) => {
   res.render('hotel/create');
@@ -89,6 +94,6 @@ router.get('/:id/edit', isLogged, isOwner, renderEdit);
 router.post('/:id/edit', isLogged, isOwner, editListing);
 router.get('/:id/delete', isLogged, isOwner, deleteListing);
 router.get('/:id/details', isLogged, renderDetails);
-router.get('/:id/book', isLogged, bookListing);
+router.get('/:id/book', isLogged, notAnOwner, bookListing);
 
 module.exports = router;
