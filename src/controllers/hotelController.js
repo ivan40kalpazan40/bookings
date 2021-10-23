@@ -71,6 +71,17 @@ const deleteListing = async (req, res) => {
     res.send('Error::delete:: ' + error.message);
   }
 };
+const bookListing = async (req, res) => {
+  const hotelId = req.params.id;
+  try {
+    const hotel = await hotelServices.getOne(hotelId);
+    await hotel.book(req.user);
+    res.redirect(`/hotel/${hotelId}/details`);
+  } catch (error) {
+    console.log(error.message);
+    res.send('Error::book:: ' + error.message);
+  }
+};
 
 router.get('/create', isLogged, renderCreate);
 router.post('/create', isLogged, createListing);
@@ -78,5 +89,6 @@ router.get('/:id/edit', isLogged, isOwner, renderEdit);
 router.post('/:id/edit', isLogged, isOwner, editListing);
 router.get('/:id/delete', isLogged, isOwner, deleteListing);
 router.get('/:id/details', isLogged, renderDetails);
+router.get('/:id/book', isLogged, bookListing);
 
 module.exports = router;
