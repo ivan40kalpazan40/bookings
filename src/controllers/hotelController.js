@@ -59,10 +59,22 @@ const editListing = async (req, res) => {
   }
 };
 
+const deleteListing = async (req, res) => {
+  const hotelId = req.params.id;
+  try {
+    await hotelServices.deleteHotel(hotelId);
+    res.redirect('/');
+  } catch (error) {
+    console.log(error.message);
+    res.send('Error::delete:: ' + error.message);
+  }
+};
+
 router.get('/create', isLogged, renderCreate);
 router.post('/create', isLogged, createListing);
 router.get('/:id/edit', isLogged, renderEdit);
 router.post('/:id/edit', isLogged, editListing);
+router.get('/:id/delete', deleteListing);
 router.get('/:id/details', isLogged, renderDetails);
 
 module.exports = router;
