@@ -12,5 +12,9 @@ const hotelSchema = new mongoose.Schema({
 hotelSchema.method('isOwner', function (userId) {
   return this.owner == userId;
 });
+
+hotelSchema.method('youBooked', function (userId) {
+  return this.tenants.includes(userId);
+});
 const Hotel = mongoose.model('Hotel', hotelSchema);
 module.exports = Hotel;

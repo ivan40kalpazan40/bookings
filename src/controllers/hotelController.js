@@ -29,7 +29,8 @@ const renderDetails = async (req, res) => {
   try {
     const hotel = await hotelServices.getOne(hotelId);
     const isOwner = await hotel.isOwner(req.user._id);
-    res.render('hotel/details', { isOwner, hotel: hotel.toObject() });
+    const booked = await hotel.youBooked(req.user._id);
+    res.render('hotel/details', { isOwner, booked, hotel: hotel.toObject() });
   } catch (error) {
     console.log(error.message);
     res.send('Error::details:: ' + error.message);
