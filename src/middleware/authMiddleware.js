@@ -1,5 +1,6 @@
 const { SECRET, TOKEN_COOKIE_NAME } = require('../config/statics.config');
 const { jwtVerify } = require('../config/util.config');
+const Hotel = require('../models/Hotel');
 exports.auth = function (req, res, next) {
   const token = req.cookies[TOKEN_COOKIE_NAME];
   if (token) {
@@ -30,4 +31,15 @@ exports.isGuest = function (req, res, next) {
     return res.redirect('/');
   }
   next();
+};
+
+exports.isOwner = async function (req, res, next) {
+  const hotelId = req.params.id;
+  const hotel = await Hotel.findById(hotelId);
+  if (hotel.isOwner(req.params?._id)) {
+    // Owner
+    return next();
+  }
+  res.redirect('/');
+  //not owner
 };
