@@ -40,6 +40,7 @@ const renderEdit = async (req, res) => {
   const hotelId = req.params.id;
   try {
     const hotel = await hotelServices.getOne(hotelId);
+
     res.render('hotel/edit', { hotel: hotel.toObject() });
   } catch (error) {
     console.log(error.message);
@@ -72,8 +73,8 @@ const deleteListing = async (req, res) => {
 
 router.get('/create', isLogged, renderCreate);
 router.post('/create', isLogged, createListing);
-router.get('/:id/edit', isLogged, renderEdit);
-router.post('/:id/edit', isLogged, editListing);
+router.get('/:id/edit', isLogged, isOwner, renderEdit);
+router.post('/:id/edit', isLogged, isOwner, editListing);
 router.get('/:id/delete', isLogged, isOwner, deleteListing);
 router.get('/:id/details', isLogged, renderDetails);
 
